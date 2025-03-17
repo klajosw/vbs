@@ -1,0 +1,318 @@
+﻿VB tanfolyam
+
+--- 2. nap
+Option Explicit
+
+Sub forciklus()
+' tudjuk előre, hogy hányszor szeretnénk meghívni
+  Dim i As Integer
+  For i = 1 To 10
+     ' lehetne range -vel hícatkozás, de a cells a jobban használható
+     Cells(i, 1) = i  ' sor, oszlop sorrendű a paraméterek használata
+     
+  Next
+  
+
+
+End Sub 
+-----
+Sub whileciklus()
+  Dim i As Integer
+  i = 1
+  Do While i <= 10
+    Cells(i, 2) = i + 10    ' sor, oszlop sorrendű a paraméterek használata
+      i = i + 1
+  Loop
+
+End Sub
+-----
+
+Sub dountile()
+  Dim i As Integer
+  i = 1
+  Do
+      Cells(i, 3) = i + 20    ' sor, oszlop sorrendű a paraméterek használata
+      i = i + 1
+  Loop Until i > 10           ' 11-nél kilép (kilépési szabályt adjuk meg !!)
+  
+
+End Sub
+
+-----
+Option Explicit
+
+Private Sub cmbTermek_Change()
+  'txtAr = WorksheetFunction.VLookup(cmbTermek.Value, Range("termek!A:B"), 2, False)
+  Dim i As Integer
+  i = 2
+  Do While Cells(i, 1) <> cmbTermek.Value And Cells(i, 1) <> ""
+     i = i + 1
+  Loop
+  txtAr = Cells(i, 2)
+End Sub
+
+
+Private Sub UserForm_Initialize()
+'  cmbTermek.AddItem (Cells(2, 1))   ' direk meghívásos feltöltés 1.
+'  cmbTermek.AddItem (Cells(3, 1))   ' direk meghívásos feltöltés 2.
+  
+  Dim i As Integer
+  i = 2
+  Do While Cells(i, 1) <> ""
+    cmbTermek.AddItem (Cells(i, 1))
+    i = i + 1
+  Loop
+
+End Sub
+
+------
+debug.print instr(1, "alma körte", " ")
+ 5 
+
+debug.print len (range("adatok!A1"))
+ 28 
+
+
+------------
+Sub szetszed()
+ Dim i, j, k, szpoz, honnan, kezdet, vege As Integer
+ Dim szokozok(100) As Integer
+ Dim szoveg As String
+ szoveg = Range("adatok!A1")
+ honnan = 1
+ i = 0
+ Do
+   szpoz = InStr(honnan, szoveg, " ")
+   If szpoz <> 0 Then
+      szokozok(i) = szpoz
+      i = i + 1
+      honnan = szpoz + 1
+   End If
+ Loop Until szpoz = 0
+ 
+ szokozok(i) = Len(szoveg)
+ 
+ kezdet = 1
+ vege = szokozok(0)
+ 
+ For j = 0 To i
+   Cells(1, 2 + j) = Mid(szoveg, kezdet, vege)
+   kezdet = szokozok(j) + 1
+   vege = szokozok(j + 1) - szokozok(j)
+ Next
+ 
+ End Sub
+
+
+-------
+
+Sub szetszed2()
+ Dim i, j, k, m, szpoz, honnan, kezdet, vege As Integer
+ Dim szokozok(100) As Integer
+ Dim szoveg As String
+ m = 1
+  
+ Do While Cells(m, 1) <> ""
+' szoveg = Range("adatok!A1")
+  szoveg = Cells(m, 1)
+ honnan = 1
+ i = 0
+ Do
+   szpoz = InStr(honnan, szoveg, " ")
+   If szpoz <> 0 Then
+      szokozok(i) = szpoz
+      i = i + 1
+      honnan = szpoz + 1
+   End If
+ Loop Until szpoz = 0
+ 
+ szokozok(i) = Len(szoveg) +1
+ 
+ kezdet = 1
+ vege = szokozok(0) -1 
+ 
+ For j = 0 To i
+   Cells(m, 2 + j) = Mid(szoveg, kezdet, vege)
+   kezdet = szokozok(j) + 1
+   vege = szokozok(j + 1) - szokozok(j) -1
+ Next
+ 
+ m = m + 1
+ Loop
+ 
+ 
+ End Sub
+
+--------
+
+Sub main()
+ Call szetszed3("-")
+End Sub
+
+---
+
+
+Sub szetszed3(karakter As String)
+ Dim i, j, k, m, szpoz, honnan, kezdet, vege As Integer
+ Dim szokozok(100) As Integer
+ Dim szoveg As String
+ m = 1
+  
+ Do While Cells(m, 1) <> ""
+' szoveg = Range("adatok!A1")
+  szoveg = Cells(m, 1)
+ honnan = 1
+ i = 0
+ Do
+   szpoz = InStr(honnan, szoveg, karakter)
+   If szpoz <> 0 Then
+      szokozok(i) = szpoz
+      i = i + 1
+      honnan = szpoz + 1
+   End If
+ Loop Until szpoz = 0
+ 
+ szokozok(i) = Len(szoveg) +1
+ 
+ kezdet = 1
+ vege = szokozok(0) - 1
+ 
+ For j = 0 To i
+   Cells(m, 2 + j) = Mid(szoveg, kezdet, vege)
+   kezdet = szokozok(j) + 1
+   vege = szokozok(j + 1) - szokozok(j) - 1
+ Next
+ 
+ m = m + 1
+ Loop
+ 
+ 
+ End Sub
+
+--------------------
+Function hanyeves(szulido As Date) As Integer
+   Dim maev, maho, manap, szev, szho, sznap, kor As Integer
+   maev = Year(Date)
+   maho = Month(Date)
+   manap = Day(Date)
+   
+   szev = Year(DateValue(szulido))
+   szho = Month(DateValue(szulido))
+   sznap = Day(DateValue(szulido))
+   
+   kor = maev - szev
+   If szho < maho Then
+      hanyeves = kor
+   ElseIf (szho = maho And sznap <= manap) Then
+      hanyeves = kor
+   Else
+      hanyeves = kor - 1
+   End If
+  
+End Function
+
+Function hetnapja(datum As Date) As String
+  Dim nap As Byte
+  nap = WorksheetFunction.Weekday(datum, 2)
+  If nap = 1 Then hetnapja = "Hétfő"
+  If nap = 2 Then hetnapja = "Kedd"
+  If nap = 3 Then hetnapja = "Szerda"
+  If nap = 4 Then hetnapja = "Csütörtök"
+  If nap = 5 Then hetnapja = "Péntek"
+  If nap = 6 Then hetnapja = "Szombat"
+  If nap = 7 Then hetnapja = "Vasárnap"
+  
+  
+  
+
+End Function
+
+Sub fuggvenyteszt()
+ ' Debug.Print balrol(Range("a1"))
+ ' Debug.Print balrol2(Range("a1"), " ")
+ ' Debug.Print balrol2("lajoska király vagy  már megint", "  ")
+ ' Debug.Print hanyeves("1962.03.14")
+ Debug.Print hetnapja("2017.03.30")
+End Sub
+
+---------------
+Option Explicit
+
+Private Sub chkBiztositas_Click()
+ ' biztosítás
+ 
+  If chkBiztositas Then
+    Range("adatok!B7") = 250
+  Else
+   Range("adatok!B7") = 0
+  End If
+   cmSzamol.Enabled = True
+   
+End Sub
+
+Private Sub cmbSzuro_Change()
+  Dim eletkor As Byte
+  eletkor = Year(Date) - cmbSzuro.Value
+  lbEletkor.Caption = "Életkor: " & eletkor
+
+  Range("adatok!B3") = cmbSzuro.Value
+  
+End Sub
+
+Private Sub cmSzamol_Click()
+' számol gomb
+Dim rata, idoszak, hitelosszeg, biztositas As Double
+ rata = Range("adatok!b9")
+ idoszak = Range("adatok!b6")
+ hitelosszeg = Range("adatok!b5")
+ biztositas = Range("adatok!b7")
+ ' Range("adatok!b7") = (rata * idoszak * hitelosszeg) + biztositas
+ Range("adatok!b8") = Round(Pmt(rata, idoszak, hitelosszeg), 0) + biztositas
+ lbReszlet.Caption = "Havi részlet: " & Range("adatok!b8") & " Ft"
+
+End Sub
+
+Private Sub Label1_Click()
+
+End Sub
+
+Private Sub Label3_Click()
+
+End Sub
+
+Private Sub obFerfi_Click()
+ Range("adatok!B4") = "Férfi"
+
+End Sub
+
+Private Sub obNo_Click()
+  Range("adatok!B4") = "Nő"
+
+End Sub
+
+Private Sub sbfutam_Change()
+  Range("adatok!B6") = sbfutam.Value
+  Label4.Caption = "Futamidő: " & sbfutam.Value & " év"
+  
+End Sub
+
+Private Sub sphitel_Change()
+  Range("adatok!B5") = sphitel.Value
+  Label3.Caption = "Hitelösszeg: " & sphitel.Value & " Ft"
+
+End Sub
+
+Private Sub txtNev_Change()
+   Range("adatok!B2") = txtNev.Text
+End Sub
+
+Private Sub UserForm_Initialize()
+Dim rata As Double
+
+  rata = Range("adatok!B9") * 100
+  lbKamat.Caption = "Kamat: " & rata & " %"
+  Range("adatok!B2:B5").Clear
+  
+  cmSzamol.Enabled = False
+  
+End Sub

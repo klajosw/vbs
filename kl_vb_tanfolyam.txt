@@ -1,0 +1,940 @@
+﻿VB tanfolyam
+
+--- 2. nap
+Option Explicit
+
+Sub forciklus()
+' tudjuk előre, hogy hányszor szeretnénk meghívni
+  Dim i As Integer
+  For i = 1 To 10
+     ' lehetne range -vel hícatkozás, de a cells a jobban használható
+     Cells(i, 1) = i  ' sor, oszlop sorrendű a paraméterek használata
+     
+  Next
+  
+
+
+End Sub 
+-----
+
+Option Explicit
+
+Function balrol(szoveg As String)
+  Dim hanykarakter As Integer
+  hanykarakter = WorksheetFunction.Search(" ", szoveg)
+  balrol = Left(szoveg, hanykarakter - 1)
+End Function
+
+Function balrol2(szoveg As String, karakter As String)
+  Dim hanykarakter As Integer
+  hanykarakter = WorksheetFunction.Search(karakter, szoveg)
+  balrol2 = Left(szoveg, hanykarakter - 1)
+End Function
+Function hanyeves(szulido As Date) As Integer
+   Dim maev, maho, manap, szev, szho, sznap, kor As Integer
+   maev = Year(Date)
+   maho = Month(Date)
+   manap = Day(Date)
+   
+   szev = Year(DateValue(szulido))
+   szho = Month(DateValue(szulido))
+   sznap = Day(DateValue(szulido))
+   
+   kor = maev - szev
+   If szho < maho Then
+      hanyeves = kor
+   ElseIf (szho = maho And sznap <= manap) Then
+      hanyeves = kor
+   Else
+      hanyeves = kor - 1
+   End If
+  
+End Function
+
+Function hetnapja(datum As Date) As String
+  Dim nap As Byte
+  nap = WorksheetFunction.Weekday(datum, 2)
+  If nap = 1 Then hetnapja = "Hétfő"
+  If nap = 2 Then hetnapja = "Kedd"
+  If nap = 3 Then hetnapja = "Szerda"
+  If nap = 4 Then hetnapja = "Csütörtök"
+  If nap = 5 Then hetnapja = "Péntek"
+  If nap = 6 Then hetnapja = "Szombat"
+  If nap = 7 Then hetnapja = "Vasárnap"
+  
+  
+  
+
+End Function
+
+Sub fuggvenyteszt()
+ ' Debug.Print balrol(Range("a1"))
+ ' Debug.Print balrol2(Range("a1"), " ")
+ ' Debug.Print balrol2("lajoska király vagy  már megint", "  ")
+ ' Debug.Print hanyeves("1962.03.14")
+ Debug.Print hetnapja("2017.03.30")
+End Sub
+---------------------
+Option Explicit
+
+Private Sub cmbTermek_Change()
+  ' txtAr = WorksheetFunction.VLookup(cmbTermek.Value, Range("termek!A:B"), 2, False)
+  Dim i As Integer
+  i = 2
+  Do While Cells(i, 1) <> cmbTermek.Value And Cells(i, 1) <> ""
+     i = i + 1
+  Loop
+  txtAr = Cells(i, 2)
+  
+  If txtAr <> "" And cmbMenyiseg.Value <> "" Then kesz.Caption = txtAr * cmbMenyiseg.Value
+  
+  
+  
+  
+End Sub
+
+
+Private Sub UserForm_Initialize()
+'  cmbTermek.AddItem (Cells(2, 1))   ' direk meghívásos feltöltés 1.
+'  cmbTermek.AddItem (Cells(3, 1))   ' direk meghívásos feltöltés 2.
+  
+  Dim i, ii As Integer
+  i = 2
+  Do While Cells(i, 1) <> ""
+    cmbTermek.AddItem (Cells(i, 1))
+    i = i + 1
+  Loop
+  
+  ii = 5
+  Do While ii <= 100
+        cmbMenyiseg.AddItem (ii)
+        ii = ii + 1
+  Loop
+    
+
+End Sub
+-------------
+application.sceenupdating = false
+----
+Public Sub Beep()
+Here is an example of calling it:
+
+Sub Exercise()
+    Beep
+End Sub
+----
+  MsgBox ("Your logon credentials have been checked." & _
+            vbCrLf & "To complete your application, please " & _
+            "fill out the following survey")
+			----
+			Sub ParseValue()
+
+Dim sMyWord as String
+
+Dim iMyNumber as Integer
+
+    sMyWord = Range("A1").Text
+
+    iMyNumber = Range("A1").Value
+
+End Sub
+---
+
+Sub SetObJect()
+
+Dim rMyCell as Range
+
+    Set rMyCell = Range("A1")
+
+End Sub
+---
+Debug.Print  Val ("10 Main Street")
+---------
+
+Sub Makró1()
+'
+' Makró1 Makró
+'
+
+'
+'-- Forrás xls megnyítása
+    Workbooks.Open Filename:="C:\tmp\letoltes\forras.xlsm"
+'-- Első cellára lépés
+    Range("A1").Select ' első cella
+'-- Utolsó celláig kijelőlés
+    Range(Selection, ActiveCell.SpecialCells(xlLastCell)).Select
+'--  másolás
+    Selection.Copy
+'-- cél xls -re átvátás
+    Windows("cell.xlsm").Activate
+'-- első cellára állás
+    Range("A1").Select
+'-- utolsó cellára állás
+    ActiveCell.SpecialCells(xlLastCell).Select
+'-- eggyel jobra kellene
+    Range("K3").Select
+'-- első (legfelső) sorba fellépés
+    Selection.End(xlUp).Select
+    ActiveSheet.Paste
+    Selection.End(xlToRight).Select
+    Selection.End(xlToLeft).Select
+    Application.CutCopyMode = False
+    ActiveWorkbook.SaveAs Filename:="C:\tmp\letoltes\kesz.xlsm", FileFormat:= _
+        xlOpenXMLWorkbookMacroEnabled, CreateBackup:=False
+End Sub
+
+---------------------
+Option Explicit
+
+Sub kl()
+
+ Dim rf As Range
+ 'rf.Range ("A:A")
+Dim i As Integer
+Dim valtozo As Double
+valtozo = 0
+i = 1
+'If IsEmpty(rf) Then MsgBox "IsEmpty"
+
+'Debug.Print Cells("a1").Value
+
+   Dim lc As Integer
+
+   For lc = 1 To 10
+ '     MsgBox (LCounter)
+ 
+      If (Cells(3, lc) > 0 And Cells(3, lc) < 100) Then
+        Debug.Print " >0"
+        Cells(3, lc).Value = 13
+      ElseIf (Trim(Cells(3, lc)) = vbNullString) Then
+        Debug.Print " vbNullString"
+        Cells(3, lc).Value = 14
+      ElseIf (Len(Trim(Cells(3, lc))) = 0) Then
+        Debug.Print " Len"
+        Cells(3, lc).Value = 15
+      ElseIf (IsEmpty(Trim(Cells(3, lc)))) Then
+        Debug.Print " IsEmpty"
+        Cells(3, lc).Value = 16
+      ElseIf (IsEmpty(Cells(3, lc))) Then
+        Debug.Print " IsEmpty2"
+        Cells(3, lc).Value = 17
+         
+      ElseIf (Cells(3, lc) < 3) Then
+        Debug.Print "3 nál kisebb"
+        Cells(3, lc).Value = 33
+    
+      Else
+        Debug.Print "Nincs"
+        Cells(3, lc).Value = valtozo
+     
+      End If
+     
+   Next lc
+
+Do While Cells(i, 2) <> Empty
+  ' doing things
+  Debug.Print Cells(i, 1).Value
+Loop
+
+Do While Not IsEmpty(Cells(i, 2))
+  Debug.Print Cells(i, 1).Value
+ ' ..
+Loop
+
+End Sub
+------------------------
+'********************************************************************
+'*
+'* Copyright Kecskeméti Lajos
+'*
+'*
+'********************************************************************
+
+' alap beállítások
+Option Explicit
+
+'ON ERROR RESUME NEXT
+'Err.Clear
+'----------------
+'On Error GoTo ErrorHandler
+
+' valtozók
+Dim nev_1, nev_8, nev_9, nev_10, nev_11, nev_1_, nev_8_, nev_9_, nev_10_, nev_11_, szam_max, leallit, tip, kiemelt, vegignez, siker
+Dim objRootDSE, strDNSDomain, adoConnection
+Dim strBase, strFilter, strAttributes, strQuery, adoRecordset
+Dim strName, strDN, objManagerList, strManagerDN
+Dim objExcel, objExcel_read, objWorkbook, objWorkbook_read,sorn, oszlopn, sork, oszlopk, eField, objRange, objRange2
+Dim strExcelPath, strExcelPath_read, konyvtar
+Dim strCon, strsql, i, ii, eltolas, eltolas_tomb, eltsz, sornn, olvass_el
+Dim eredmeny_tomb(2) 
+Dim vuk_neve(50),	munkatars_neve(50),	munkatars_szorzo(50), kiemelt_uf_neve(50),	kezd_sor(50), kezd_oszlop(50), fejlec(50),	szamolo(50),	r_nev(50), eltolasok(50), kapcsolatok(50)
+Dim kezdx, kezdy, munkalapsz, eredmeny, nev, kesz
+
+Const xlAscending = 1
+Const xlDescending = 2
+Const xlYes = 1
+kesz = 0
+'--****************************************** Vált **********************************
+konyvtar = Left(WScript.ScriptFullName,(Len(WScript.ScriptFullName) - (Len(WScript.ScriptName) + 1)))
+strExcelPath      = konyvtar & "\forras.xlsx"
+strExcelPath_read = konyvtar & "\master.xlsx"
+'--********************************************************************************
+
+WSCript.Echo "---------- xls nevek  -----------"
+WSCript.Echo konyvtar
+WSCript.Echo strExcelPath
+WSCript.Echo strExcelPath_read
+
+'-------------------------------- Excel olvasás kezdet------------------------------------------------
+Set objExcel_read = CreateObject("Excel.Application")
+objExcel_read.Visible = FALSE
+objExcel_read.ScreenUpdating = FALSE
+objExcel_read.DisplayAlerts = FALSE 
+Set objWorkbook_read = objExcel_read.Workbooks.Open(strExcelPath_read)
+
+WSCript.Echo "------------VUK tömb beolvas-----------"
+'' excel olvasó ciklus kezdet VUK
+objWorkbook_read.Worksheets("VUK").Activate
+  i=0
+  Do
+  i = i + 1
+  vuk_neve(i) = objExcel_read.Cells( i, 1).Value
+'  WSCript.Echo i
+'  WSCript.Echo vuk_neve(i)  
+  Loop While vuk_neve(i) > ""
+'' excel olvasó ciklus vég VUK
+WSCript.Echo "------------Munkatars tömb beolvas-----------"
+'' excel olvasó ciklus kezdet munkatars
+  objWorkbook_read.Worksheets("munkatars").Activate
+  i=0
+  Do
+  i = i + 1
+  munkatars_neve(i)   = objExcel_read.Cells( i, 1).Value
+  munkatars_szorzo(i) = objExcel_read.Cells( i, 2).Value
+'  WSCript.Echo i
+'  WSCript.Echo munkatars_neve(i)  
+  Loop While munkatars_neve(i) > ""
+  szam_max = i - 1
+  
+Dim kiosztott(50,10)  
+'' excel olvasó ciklus vég munkatars
+WSCript.Echo "------------Kiemelt ÜF tömb beolvas-----------"
+'' excel olvasó ciklus kezdet kiemelt
+objWorkbook_read.Worksheets("kiemelt_uf").Activate
+  i=0
+  Do
+  i = i + 1
+  kiemelt_uf_neve(i) = objExcel_read.Cells( i, 1).Value
+'  WSCript.Echo i
+'  WSCript.Echo kiemelt_uf_neve(i)  
+  Loop While kiemelt_uf_neve(i) > ""
+'' excel olvasó ciklus vég munkatars
+
+'--------------------------------  EXCEL írás  
+WSCript.Echo "------------Forras XLS beirás kezdet-----------"
+
+Set objExcel = CreateObject("Excel.Application")
+objExcel.Visible = FALSE
+objExcel.ScreenUpdating = FALSE
+objExcel.DisplayAlerts = FALSE 
+Set objWorkbook = objExcel.Workbooks.Open(strExcelPath)
+objWorkbook.Worksheets(1).Activate
+  ii = 0
+  i = 1
+''--------------------------------  
+'hátul tesztelő kezdet  
+  Do
+  i = i + 1
+
+' léptető  
+  if szam_max > ii then
+    ii = ii + 1	
+  Else 
+    ii = 1	
+  End if
+  
+  '' beolvas
+  nev_1_ = objExcel.Cells( i, 1).Value
+  nev_8_ = objExcel.Cells( i, 8).Value
+  nev_9  = objExcel.Cells( i, 9).Value
+  nev_10 = objExcel.Cells( i, 10).Value
+  nev_11 = objExcel.Cells( i, 11).Value
+  leallit = objExcel.Cells( i, 12).Value
+  
+  
+    if (nev_1_ > "") and (nev_1_ <> nev_1) then 
+	  nev_1  = nev_1_  
+      nev_8  = nev_8_  
+'     nev_9  = nev_9_
+'	  nev_10  = nev_10_
+'	  nev_11  = nev_11_
+       kesz = 0
+	ElseIf leallit > "" Then
+	  objExcel.Cells(i,1).Value = nev_1
+	  objExcel.Cells(i,8).Value = nev_8
+'	  objExcel.Cells(i,9).Value = nev_9
+'' ugyan az legyen a user is !!!
+      objExcel.Cells(i,11).Value = objExcel.Cells( (i-1), 11).Value
+'	  WSCript.Echo "- üres - vagy azonos --"
+'	  WSCript.Echo objExcel.Cells( (i), 11).Value
+'	  WSCript.Echo objExcel.Cells( (i-1), 11).Value
+	  
+	  ii = 0
+	  For Each nev In munkatars_neve
+	  ii = ii + 1
+	    if nev = objExcel.Cells( (i-1), 11).Value then
+		' szamlaló növelése
+		
+		  If     (nev_9 = "Hav.:") then
+			tip = 1
+		  ElseIf (nev_9 = "Upg.:") Then	
+			tip = 2
+		  ElseIf (nev_9 = "E.N.:") Then	
+			tip = 3
+		  ElseIf (nev_9 = "Tart.:") Then	
+			tip = 4	 
+		  Else 
+	        tip = 5
+		  End If	
+
+'					  WSCript.Echo "- üres - vagy azonos --"
+'					  WSCript.Echo nev 
+'					  WSCript.Echo kiosztott(ii, tip)
+		  		If (IsEmpty(kiosztott(ii, tip))) then
+				kiosztott(ii, tip) = 1 
+				else
+				kiosztott(ii, tip) = kiosztott(ii, tip) + 1 
+				End If
+
+'					  WSCript.Echo kiosztott(ii, tip)
+	    end if
+	  Next
+	  	  
+	  kesz = 1
+	Else
+     ' semmi	
+     kesz = 1
+    End if
+   
+
+  If     (nev_9 = "Hav.:") then
+     tip = 1
+  ElseIf (nev_9 = "Upg.:") Then	
+     tip = 2
+  ElseIf (nev_9 = "E.N.:") Then	
+     tip = 3
+  ElseIf (nev_9 = "Tart.:") Then	
+     tip = 4	 
+  Else 
+	 tip = 5
+  End If
+
+if (kesz = 0) then 
+  
+'' VUK
+  For Each nev In vuk_neve
+
+    If     (nev_8 = nev) then
+      objExcel.Cells(i,11).Value = "--- VÜK ---"
+		
+		If (IsEmpty(kiosztott(szam_max + 1, tip))) then
+		  kiosztott(szam_max + 1, tip) = 1 
+		else
+	      kiosztott(szam_max + 1, tip) = kiosztott(szam_max + 1, tip) + 1 
+		End If
+		
+	  kesz = 1
+    End If
+
+  Next
+  
+End If  
+
+if (kesz = 0) then  
+
+'' dolgozó kiválasztás kezdet  
+'' soroló
+'' kiemelt UF?
+   kiemelt = 0
+   For Each nev In kiemelt_uf_neve
+
+    if (nev = nev_1) then
+	  WSCript.Echo "-------------Kiemelt ÜF kezelése----------------------" 
+'      WSCript.Echo nev
+	   ii = 1
+	   kiemelt = 1
+	   If (IsEmpty(kiosztott(ii, 6))) then
+        kiosztott(ii, 6)  = 1
+       Else 
+        '' lökünk rajta? (másik nullás keresés)	   
+		    vegignez = 0	 
+			siker = 0	
+            do	
+			' WSCript.Echo ii
+  			    if szam_max > ii then
+                 ii = ii + 1	
+                Else 
+                  ii = 1	
+                End if	
+				
+				If (IsEmpty(kiosztott(ii, 6))) then
+                  kiosztott(ii, 6)  = 1	
+                  siker = 1		
+				  vegignez = 20				  
+				End if 
+				
+			vegignez = vegignez + 1  
+			Loop While vegignez < 15		
+		
+		  If (siker = 0) then
+            kiosztott(ii, 6)  = kiosztott(ii, 6) + 1 
+          End if 	
+		  
+       End if 	
+'	   WSCript.Echo munkatars_neve(ii)
+		'' Beírások és megállítás        
+	  objExcel.Cells(i,11).Value = munkatars_neve(ii)
+	  kesz = 1
+	End if 
+	
+   Next
+
+''------------------   
+'' sújtényező munkatars_szorzo kezdet
+   if (munkatars_szorzo(ii) > 1) and (kesz = 0) Then
+   'lasit
+'     WSCript.Echo munkatars_neve(ii)   
+'	  WSCript.Echo munkatars_szorzo(ii)
+'	  WSCript.Echo kiosztott(ii, 9)
+	  
+     vegignez = 0	 
+     do
+	 
+         '' lökünk rajta? (másik nullás keresés)	   
+		  If (IsEmpty(kiosztott(ii, 9))) then
+	        kiosztott(ii, 9)  = 1
+			vegignez = 12
+			
+		  ElseIf (kiosztott(ii, 9) <= munkatars_szorzo(ii)) Then
+            ' nem szamol, tovább lök	
+			    kiosztott(ii, 9) = kiosztott(ii, 9) + 1 
+				if szam_max > ii then
+                 ii = ii + 1	
+                Else 
+                  ii = 1	
+                End if	
+			    
+		'  ElseIf (kiosztott(ii, 9) = 2) Then	
+		    ' nem szamol, tovább lök	
+		'	kiosztott(ii, 9) = 3 
+	      Else 
+             ' mehet a	 
+            kiosztott(ii, 9) = 1			 
+            vegignez = 12
+	      End if 
+		   
+		vegignez = vegignez + 1  
+	  Loop While vegignez < 10	  
+	  
+	 objExcel.Cells(i,11).Value = munkatars_neve(ii)
+   
+   'if (kiosztott(ii, 5) > 0) then
+    If (IsEmpty(kiosztott(ii, tip))) then
+     kiosztott(ii, tip)  = 1
+    Else 
+     kiosztott(ii, tip)  = kiosztott(ii, tip) + 1 
+    End if 
+	
+  
+   ElseIf (munkatars_szorzo(ii) = 1) and (kesz = 0)  Then	
+   ' normál
+	 objExcel.Cells(i,11).Value = munkatars_neve(ii)
+   
+   'if (kiosztott(ii, 5) > 0) then
+    If (IsEmpty(kiosztott(ii, tip))) then
+     kiosztott(ii, tip)  = 1
+    Else 
+     kiosztott(ii, tip)  = kiosztott(ii, tip) + 1 
+    End if 
+	
+   else
+   ' Semmi  már készek vagyunk
+   End if 
+'' sújtényező munkatars_szorzo vég   
+''------------------
+    
+   
+''' összesített
+   If (IsEmpty(kiosztott(ii, 8))) then
+     kiosztott(ii, 8)  = 1
+   Else 
+     kiosztott(ii, 8)  = kiosztott(ii, 8) + 1 
+   End if 
+   
+'' dolgozó kiválasztás vég
+
+  End if ' kész
+  kesz = 0
+
+  Loop While leallit > ""
+'hátul tesztelő vég
+  
+WSCript.Echo "------------ Forrás xls beirás vég 1-----------"
+' összegző eltolása lefelé
+i = i + 5
+
+ii = 0
+'' kiírás kezdet munkatars statisztika
+'objExcel.Cells(i+ii,1).Value = "munkatars_neve:"
+'objExcel.Cells(i+ii,2).Value = "Hav.:"
+'objExcel.Cells(i+ii,3).Value = "Upg.:"
+'objExcel.Cells(i+ii,4).Value = "E.N.:"
+'objExcel.Cells(i+ii,5).Value = "Tart.:"
+'objExcel.Cells(i+ii,6).Value = "--ÜRES--"
+'objExcel.Cells(i+ii,7).Value = "Kiemelt"
+'objExcel.Cells(i+ii,8).Value = "Súly tényező"
+
+For Each nev In munkatars_neve
+  if nev > "" then 
+    ii = ii + 1
+'   WSCript.Echo nev 
+'	objExcel.Cells(i+ii,1).Value = nev
+'	objExcel.Cells(i+ii,2).Value = kiosztott(ii, 1)
+'	objExcel.Cells(i+ii,3).Value = kiosztott(ii, 2)
+'	objExcel.Cells(i+ii,4).Value = kiosztott(ii, 3)
+'	objExcel.Cells(i+ii,5).Value = kiosztott(ii, 4)
+'	objExcel.Cells(i+ii,6).Value = kiosztott(ii, 5)	
+'	objExcel.Cells(i+ii,7).Value = kiosztott(ii, 6)	
+'	objExcel.Cells(i+ii,8).Value = munkatars_szorzo(ii)
+  End if	
+  
+ kesz = 0  
+Next
+
+ 'VUK kiiras
+'	objExcel.Cells(i+ii+1,1).Value = "VUK"
+'	objExcel.Cells(i+ii+1,2).Value = kiosztott(szam_max + 1, 1)
+'	objExcel.Cells(i+ii+1,3).Value = kiosztott(szam_max + 1, 2)
+'	objExcel.Cells(i+ii+1,4).Value = kiosztott(szam_max + 1, 3)
+'	objExcel.Cells(i+ii+1,5).Value = kiosztott(szam_max + 1, 4)
+	
+
+
+
+
+WSCript.Echo "------------ Forrás xls beirás vég 2-----------"
+
+WSCript.Echo "---------- KÉSZ/erőforrás felszabadítás lezárások  -----------"
+' Erőforrás felszabadítása
+objExcel.ActiveWorkbook.Save
+objExcel.ActiveWorkbook.Close
+'objWorkbook = Nothing
+objExcel.Application.Quit
+'objExcel = Nothing 
+''-------------------------
+objExcel_read.ActiveWorkbook.Save
+objExcel_read.ActiveWorkbook.Close
+objExcel_read.Application.Quit
+
+-------------------------------------
+
+
+'  [Private|Public]
+Sub vba_name()
+
+'kijelőlés
+Application.Workbooks(1).Worksheets(1).Range("A1:B3").Select
+Range("b3:a1").Select
+ 
+ 'értékadás
+Range("A1").Value = "Maci Laci"
+Range("A2").Value = 2 * 3
+Cells(3, 1).Value = Date
+Cells(4, 1).Value = CDate("2012.12.24")
+Cells(4, 1).Value = ""
+
+ 'tölések
+Range("A1:A4").ClearContents
+Range("A1:A4").ClearFormats
+Range("A1:A4").Clear
+  
+Range("A1:A4").Delete
+Range("A1:D1").Delete
+
+'A1 cella tartományának asor és oszlop száma
+s = Range("A1").CurrentRegion.Rows.Count
+o = Range("A1").CurrentRegion.Columns.Count
+
+' excel cella kezelési mód lekérdezése beállítása
+If Application.ReferenceStyle = xlR1C1 Then
+  MsgBox ("Az Excel S1O1 ")
+Else
+  MsgBox ("Az Excel A1 ")
+End If
+Application.ReferenceStyle = xlA1
+
+
+
+MsgBox Cells(2, 3).Address                 '$C$2
+MsgBox Cells(2, 3).Address(True, False)   'C$2
+MsgBox Cells(2, 3).Address(False, True)   '$C2
+MsgBox Cells(2, 3).Address(False, False)   'C2
+  
+MsgBox Cells(2, 3).Address(ReferenceStyle:=xlR1C1)   'R2C3
+MsgBox Cells(2, 3).Address(ReferenceStyle:=xlR1C1, _
+  RowAbsolute:=False, ColumnAbsolute:=False, _
+  RelativeTo:=Cells(1, 1))            'R[1]C[2]
+
+
+
+Range("C5").Formula = "=SUM(C2:C4)"
+Range("D5").FormulaLocal = "=SZUM(D2:D4)"
+
+s = Range("A1").CurrentRegion.Rows.Count
+st = Cells(s, 1).Address(False, False)
+
+o = Range("A1").CurrentRegion.Columns.Count
+st = Cells(1, o).Address(False, False)
+Cells(1, o + 1).FormulaLocal = "=SZUM(A1:" + st + ")"
+
+
+Range("C2").FormulaR1C1 = "=R1C1*2"     ' "=$A$1*2"
+Range("C2").FormulaR1C1 = "=RC1*2"     ' "=$A2*2"
+Range("C2").FormulaR1C1 = "=R1C*2"     ' "=C$1*2"
+Range("C2").FormulaR1C1 = "=R[1]C[-1]*2"   ' "=B3*2"
+Range("C2").FormulaR1C1Local = "=S1O1*2"   ' "=$A$1*2"
+Range("C2").FormulaR1C1Local = "=S[1]O[-1]*2"  ' "=B3*2"
+
+
+
+'másolás
+Cells(s + 1, 1).Copy Destination:= _
+  Range(Cells(s + 1, 2), Cells(s + 1, o))
+  
+Cells(1, o + 1).AutoFill Destination:= _
+  Range(Cells(1, o + 1), Cells(s, o + 1))
+  
+  
+Cells(1, o + 1).Copy
+Range(Cells(2, o + 1), Cells(s, o + 1)).PasteSpecial
+Application.CutCopyMode = False
+
+'eltolt kijelőlés
+Range("C3:D6").Rows(2).Select
+Range("C3:D6").Columns(2).Select
+Range("C3:D6").Cells(1, 2).Select
+Range(Cells(3, 3), Cells(6, 4)).Range("B1").Select
+'Egy Range objektum egy Range objektuma
+Range("C3:D6").Range("A2:B2").Select
+'Egy Range objektum elmozd
+Range("C3:D6").Offset(-1, 1).Select
+Cells(2, 2).Resize(3, 2).Select
+Application.Union(Columns(1), Columns(4)).Select
+'Az A1-
+Range("A1").Cells(1, 1).Offset(0, 0).Resize(1, 1).Cells(1).Select
+
+
+MsgBox Fordit("Kitűnő vőt rokonok orrtövön ütik")
+'Call esetén kell a zárójel
+s = "Indul a görög aludni": Call MegFordit(s): MsgBox s
+'Call nélkül nem kell a zárójel
+s = "Géza kék az ég": MegFordit s: MsgBox s
+
+' datbekérés
+Dim n As Integer
+n = InputBox("lajos", "title1", 5)
+
+'üzenet kiírás
+MsgBox ("2*3=" & 2 * 3)
+
+'debug kiírás
+Debug.Print ("2*3=" & 2 * 3)
+Debug.Print "2*3="; 2 * 3; Tab(10); "3*4=”; 3*4 "
+
+'elágazás
+If d = 0 Then
+   MsgBox ("Nulla")
+ElseIf d > 0 Then
+   MsgBox ("Pozitív")
+Else:
+   MsgBox ("Negatív")
+End If
+
+' ciklus
+i = 1
+While i <= 3
+  MsgBox i: i = i + 1
+Wend
+
+'ciklus 2
+For i = 1 To 5 Step 2
+MsgBox i
+Next
+
+End Sub
+'Sztring megfordítása függvénnyel
+Function Fordit(st As String) As String
+Dim i As Integer
+Dim er As String
+er = ""
+For i = Len(st) To 1 Step -1
+  er = er + Mid(st, i, 1)
+Next
+Fordit = er
+End Function
+
+
+
+'Sztring megfordítása eljárással
+Sub MegFordit(st As String)
+Dim i As Integer, er As String
+er = ""
+For i = 1 To Len(st)
+   er = Mid(st, i, 1) + er
+Next 'A cím szerinti (ByRef) paraméterben (st) adjuk vissza az eredményt
+st = er
+End Sub
+
+Sub MenuKirak()
+Dim fomenu As CommandBar
+Dim fomenupont As CommandBarControl, almenupont As CommandBarControl
+Set fomenu = Application.CommandBars.ActiveMenuBar
+Set fomenupont = fomenu.Controls.Add(Type:=msoControlPopup)
+fomenupont.Caption = "KLmenü"
+Set almenupont = fomenupont.CommandBar.Controls.Add(Type:=msoControlButton)
+almenupont.Caption = "KLmenüpont"
+almenupont.OnAction = "FormKirak"
+End Sub
+ 
+Sub FormKirak()
+  UserForm1.Show
+End Sub
+
+ 
+Sub MenuLevesz()
+Dim menupont As CommandBarControl
+For Each menupont In Application.CommandBars.ActiveMenuBar.Controls
+  If menupont.Caption = "KLmenü" Then
+    menupont.Delete
+  End If
+Next
+End Sub
+  
+Sub MenuAlaphelyzet()
+   Application.CommandBars("Worksheet Menu Bar").Reset
+End Sub
+ 
+Sub FajlValasztas()
+Dim s As String
+s = ""
+If Application.Dialogs(xlDialogOpen).Show Then
+   
+  s = ActiveWorkbook.FullName
+   
+  ActiveWorkbook.Close
+End If
+If s = "" Then
+ MsgBox " nincs választva"
+Else
+  MsgBox "A kiválasztott file " + vbCrLf + s
+End If
+End Sub
+
+Sub DiagramTorles()
+'diagramok törlése
+If Charts.Count > 0 Then
+  Application.DisplayAlerts = False
+  Charts.Delete
+  Application.DisplayAlerts = True
+End If
+If Worksheets(1).ChartObjects.Count > 0 Then
+  Worksheets(1).ChartObjects.Delete
+End If
+End Sub
+
+
+Sub Diagram()
+'diagram készítése
+Dim r As Range
+Set r = Worksheets(1).Range("A1").CurrentRegion
+Charts.Add
+With ActiveChart
+  .ChartType = xlColumnClustered
+  .SetSourceData Source:=r, PlotBy:=xlRows
+  .Location Where:=xlLocationAsObject, name:=Worksheets(1).name
+End With
+Worksheets(1).Activate
+Range("A1").Select
+End Sub
+
+Sub MunkalapFgv1()
+Dim r As Range, min As Variant
+Set r = Application.Worksheets("Munka1").Range("A1:C5")
+min = Application.WorksheetFunction.min(r)
+MsgBox min
+End Sub
+  
+Sub MunkalapFgv2()
+Dim a(1 To 10) As Integer, i As Integer
+For i = 1 To 10: a(i) = i: Next
+MsgBox WorksheetFunction.Sum(a)  '55
+End Sub
+ 
+
+ --------------------------
+ 
+ 'A változók kötelező deklarálásához
+Option Explicit
+'Egy hallgató érdemjegyeinek száma
+Const db = 2
+'Egy hallgató adatait leíró rekordtípus
+Type Adat
+  Nev As String * 20        'Fix (20) hosszú sztring
+  Jegyek(1 To db) As Byte
+End Type
+
+'Adat típusú elemekből álló tömb kiírása
+Sub Kiiras(a() As Adat)
+Dim i As Integer, j As Integer, st As String
+For i = LBound(a) To UBound(a)
+  st = a(i).Nev  'Az st változóba fűzzük össze egy hallgató adatait
+  For j = 1 To db
+    st = st + " " + Str(a(i).Jegyek(j))
+  Next
+  Debug.Print st  'Kiírás az Immediate ablakba (soronként egy hallgató)
+Next
+End Sub
+
+'Adat típusú elemekből álló tömb rendezése név szerint
+Sub Rendezes(a() As Adat)
+Dim cs As Adat, i As Integer, j As Integer, k As Integer
+For i = LBound(a) To UBound(a) - 1
+  'A tömb i. elemétől kezdve megkeressük a legkisebb elemet
+  k = i  'k: az aktuálisan kicsi elem indexe
+  For j = i + 1 To UBound(a)
+    'Találunk-e kisebbet?
+    If a(j).Nev < a(k).Nev Then
+      k = j  'Igen, ezért módosul a kicsi elem indexe
+    End If
+  Next
+  'Helyén (i. helyen) van a kicsi elem?
+  If k > i Then
+    'Nincs, ezért a helyére tesszük (felcserélve az i. és k. elemeket)
+    cs = a(i): a(i) = a(k): a(k) = cs  'Rekordok közötti értékadások
+  End If
+Next
+End Sub
+
+'A rendezés tesztjéhez ez indítandó
+Sub RendezesTeszt()
+Dim a(2) As Adat
+a(0).Nev = "Madarász Mónika": a(0).Jegyek(1) = 1: a(0).Jegyek(2) = 2
+a(1).Nev = "Vadász Viktória": a(1).Jegyek(1) = 2: a(1).Jegyek(2) = 3
+'A With utasítással rövidíthető a forráskód
+With a(2)
+  .Nev = "Halász Helga": .Jegyek(1) = 3: .Jegyek(2) = 4
+End With
+Call Rendezes(a)
+Call Kiiras(a)
+End Sub
+------------------
